@@ -3,12 +3,13 @@ pragma solidity ^0.4.15;
 import 'zeppelin-solidity/contracts/crowdsale/Crowdsale.sol';
 import 'zeppelin-solidity/contracts/crowdsale/RefundableCrowdsale.sol';
 import 'zeppelin-solidity/contracts/crowdsale/CappedCrowdsale.sol';
+import 'zeppelin-solidity/contracts/lifecycle/Pausable.sol';
 
 import './YogiToken.sol';
 import './FounderAllocation.sol';
 import './MarketIncentiveAllocation.sol';
 
-contract YogiRefundableCrowdsale is RefundableCrowdsale, CappedCrowdsale {
+contract YogiRefundableCrowdsale is RefundableCrowdsale, CappedCrowdsale, Pausable {
 
   uint public minContribAmount = 0.1 ether; // 0.1 ether
 
@@ -28,7 +29,7 @@ contract YogiRefundableCrowdsale is RefundableCrowdsale, CappedCrowdsale {
     return new YogiToken();
   }
 
-  function buyTokens(address beneficiary) public payable {
+  function buyTokens(address beneficiary) public payable whenNotPaused {
     require(beneficiary != address(0));
     require(validPurchase());
 
@@ -64,7 +65,7 @@ contract YogiRefundableCrowdsale is RefundableCrowdsale, CappedCrowdsale {
       return bonusRate;
   }
 
-  function finalization() internal {
+  function finalization() internal whenNotPaused {
     //Allot founder tokens to a smart contract which will frozen for 9 months
     founderAllocation = new FounderAllocation();
     token.mint(address(founderAllocation), lockedFounderAllocationTokens);

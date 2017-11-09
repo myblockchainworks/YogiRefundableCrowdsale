@@ -17,11 +17,11 @@ module.exports = function(deployer) {
   //uint256 _startTime, uint256 _endTime, uint256 _rate, address _wallet, uint256 _goal
 
   const startTime = latestTime() + duration.minutes(5);
-  const endTime = startTime + duration.days(3);
+  const endTime = startTime + duration.days(1);
   const rate = 1000;
-  const wallet = "0x895324D4d8E9Bf08db6C78d828B8498291e7AB4c";
-  const softCap = web3.toWei('15', 'ether');
-  const hardCap = web3.toWei('100', 'ether');
+  const wallet = "0x48a5a991AFE573feD8cC2269197232AEA23F07f0";
+  const softCap = web3.toWei('2', 'ether');
+  const hardCap = web3.toWei('5', 'ether');
   console.log([startTime, endTime, rate, wallet, softCap, hardCap]);
-  deployer.deploy(YogiRefundableCrowdsale, startTime, endTime, rate, wallet, softCap, hardCap, {gas: '6952225'});
+  deployer.deploy(YogiRefundableCrowdsale, startTime, endTime, rate, wallet, softCap, hardCap); //, {gas: '6952225'}
 };
